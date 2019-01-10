@@ -8,10 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-/**
- *
- * @author THAYCACAC
- */
 public class Main {
 
     public static void main(String[] args) {
@@ -29,7 +25,6 @@ public class Main {
                     continue;
                 }
                 line = Manager.formatOneSpace(line);
-                line = Manager.formatSpecialCharacters(line);
                 line = Manager.afterDotUpperCase(line);
                 line = Manager.noSpaceQuotes(line);
                 line = Manager.firstUpercase(line);
