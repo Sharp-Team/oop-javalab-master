@@ -1,4 +1,5 @@
 
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,10 +9,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-/**
- *
- * @author THAYCACAC
- */
 public class Manager {
 
     //one space by special characters
@@ -20,10 +17,10 @@ public class Manager {
         String[] strings = line.split("\\s*\\" + character + "\\s*");
         //appen every word and character special distance is one space
         for (String oneWord : strings) {
-            stringBuffer.append(oneWord + " " + character);
+            stringBuffer.append(oneWord + character);
             stringBuffer.append(" ");
         }
-        return stringBuffer.toString().trim().substring(0, stringBuffer.length() - 3);
+        return stringBuffer.toString().trim().substring(0, stringBuffer.length() - 2);
     }
 
     //only one space between words and all character lowercase
@@ -36,22 +33,6 @@ public class Manager {
         line = formatOneSpaceSpecial(line, "\"");
         return line.trim();
     }
-
-    //only one space after comma (,), dot (.) and colon (:). 
-    public static String formatSpecialCharacters(String line) {
-        StringBuffer stringBuffer = new StringBuffer(line);
-        //check from first to last before .,:; then delete
-        for (int i = 0; i < stringBuffer.length() - 1; i++) {
-            if (stringBuffer.charAt(i) == ' '
-                    && stringBuffer.charAt(i + 1) == '.'
-                    || stringBuffer.charAt(i + 1) == ','
-                    || stringBuffer.charAt(i + 1) == ':') {
-                stringBuffer.deleteCharAt(i);
-            }
-        }
-        return stringBuffer.toString().trim();
-    }
-
     //first character of word after dot is in Uppercase and other words are in lower case.
     public static String afterDotUpperCase(String line) {
         StringBuffer stringBuffer = new StringBuffer(line);
@@ -67,26 +48,30 @@ public class Manager {
     }
 
     //there are no spaces before and after sentence or word phrases in quotes (“”).
-    static int countQuetes = 0;
+    static int countQuotes = 0;
 
     public static String noSpaceQuotes(String line) {
         StringBuffer stringBuffer = new StringBuffer(line);
         for (int i = 0; i < stringBuffer.length(); i++) {
-            if (stringBuffer.charAt(i) == '"' && countQuetes % 2 == 0) {
-                stringBuffer.deleteCharAt(i + 1);
-                countQuetes++;
-            } else if (stringBuffer.charAt(i) == '"' && countQuetes % 2 == 1
+            if (stringBuffer.charAt(i) == '"' && countQuotes % 2 == 0) {
+                if (stringBuffer.charAt(i+1) == ' ') {stringBuffer.deleteCharAt(i+1);}
+                stringBuffer.insert(i, " ");
+                countQuotes++;
+                i++;
+            } else if (stringBuffer.charAt(i) == '"' && countQuotes % 2 == 1
                     && i != 0) {
-                stringBuffer.deleteCharAt(i - 1);
-                countQuetes++;
+                if (stringBuffer.charAt(i-1) == ' ') {stringBuffer.deleteCharAt(i-1);}
+//                stringBuffer.insert(i, " ");
+                countQuotes++;
+                i+=2;
             }
         }
+        System.out.println(countQuotes);
         return stringBuffer.toString().trim();
     }
 
     //first character of word in first line is in Uppercase
     public static String firstUpercase(String line) {
-        line = line.substring(3);
         StringBuffer stringBuffer = new StringBuffer(line);
         for (int i = 0; i < line.length(); i++) {
             if (Character.isLetter(line.charAt(i))) {
@@ -121,7 +106,7 @@ public class Manager {
         try {
             BufferedReader br = new BufferedReader(new FileReader(new File("input.txt")));
             PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("output.txt", true)));
-            String line;
+                String line;
             //write until end file
             while ((line = br.readLine()) != null) {
                 //check line empty
